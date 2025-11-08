@@ -23,6 +23,9 @@ const chatSchema = new Schema<ChatDocument>({
         ref: "Message",
         default: null,
     },
+    groupName: {
+        type: String,
+    },
     isGroup: {
         type: Boolean,
         default: false,
