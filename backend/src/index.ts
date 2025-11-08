@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
+import http from "http";
 import passport from "passport";
 import { Env } from "./configs/env.config";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware";
@@ -9,9 +10,14 @@ import { HTTPSTATUS } from "./configs/http.config";
 import connectDatabase from "./configs/database.config";
 import "./configs/passport.config"
 import routes from "./routes";
+import { initializeSocket } from "./lib/socket";
 
 
 const app = express();
+const server = http.createServer(app);
+
+// socket
+initializeSocket(server);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
@@ -34,7 +40,7 @@ app.get(
 
 app.use("/api", routes);
 
-app.listen(Env.PORT, async() => {
+server.listen(Env.PORT, async() => {
     await connectDatabase();
   console.log(`Server is running on port ${Env.PORT} in ${Env.NODE_ENV} mode`);
 });
