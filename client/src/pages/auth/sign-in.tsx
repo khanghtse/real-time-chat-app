@@ -44,7 +44,7 @@ const SignIn = () => {
         <Card>
           <CardHeader className="flex flex-col items-center justify-center gap-3">
             <Logo />
-            <CardTitle className="text-xl">Create your account</CardTitle>
+            <CardTitle className="text-xl">Sign In</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
