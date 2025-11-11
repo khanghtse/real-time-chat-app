@@ -14,19 +14,20 @@ const ChatListHeader = ({ onSearch }: { onSearch: (val: string) => void }) => {
       <div className="flex items-center justify-between mb-3">
         <h1 className="text-xl font-semibold">Chat</h1>
         <div>
-            {/* NewChatPopover */}
-            <NewChatPopover />
+          {/* NewChatPopover */}
+          <NewChatPopover />
         </div>
       </div>
       <div>
-        <InputGroup className="bg-background text-sm" />
-        <InputGroupInput
-          placeholder="search..."
-          onChange={(e) => onSearch(e.target.value)}
-        />
-        <InputGroupAddon>
-          <Search className="h-4 w-4 text-muted-foreground" />
-        </InputGroupAddon>
+        <InputGroup className="bg-background text-sm">
+          <InputGroupInput
+            placeholder="Search..."
+            onChange={(e) => onSearch(e.target.value)}
+          />
+          <InputGroupAddon>
+            <Search className="h-4 w-4 text-muted-foreground" />
+          </InputGroupAddon>
+        </InputGroup>
       </div>
     </div>
   );
