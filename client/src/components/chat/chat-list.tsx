@@ -5,11 +5,15 @@ import ChatListItem from "./chat-list-item";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import ChatListHeader from "./chat-list-header";
+import { useSocket } from "@/hooks/use-socket";
+import type { ChatType, MessageType } from "@/types/chat.type";
 
 const ChatList = () => {
   const navigate = useNavigate();
 
-  const { fetchChats, chats, isChatsLoading } = useChat();
+  const { fetchChats, chats, isChatsLoading, addNewChat, updateChatLastMessage } = useChat();
+
+  const {socket} = useSocket();
 
   const { user } = useAuth();
 
@@ -31,6 +35,39 @@ const ChatList = () => {
   useEffect(() => {
     fetchChats();
   }, [fetchChats]);
+
+  useEffect(() => {
+    if(!socket) return;
+
+    const handleNewChat = (newChat: ChatType) => {
+      console.log("received new chat", newChat);
+      addNewChat(newChat);
+    }
+
+    socket.on("chat:new", handleNewChat)
+
+    return () => {
+      socket.off("chat:new", handleNewChat)
+    }
+  }, [addNewChat, socket]);
+
+  useEffect(() => {
+    if(!socket) return;
+
+    const handleChatUpdate = (data: {
+      chatId: string;
+      lastMessage: MessageType;
+    }) => {
+      console.log("received update chat", data.lastMessage);
+      updateChatLastMessage(data.chatId, data.lastMessage);
+    }
+
+    socket.on("chat:update", handleChatUpdate)
+
+    return () => {
+      socket.off("chat:update", handleChatUpdate)
+    }
+  }, [socket, updateChatLastMessage]);
 
   const onRoute = (id: string) => {
     navigate(`/chat/${id}`);

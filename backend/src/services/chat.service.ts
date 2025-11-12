@@ -81,7 +81,7 @@ export const getSingleChatService = async (chatId: string, userId: string) => {
     participants: {
       $in: [userId],
     },
-  });
+  }).populate("participants", "name avatar")
   if (!chat) {
     throw new BadRequestException("Chat not found");
   }

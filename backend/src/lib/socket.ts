@@ -64,6 +64,7 @@ export const initializeSocket = (httpServer: HTTPServer) => {
         try {
           await validateChatParticipant(chatId, userId);
           socket.join(`chat:${chatId}`);
+          console.log(`User ${userId} join room chat ${chatId}`);
           callback?.();
         } catch (error) {
           callback?.("Error joining chat");

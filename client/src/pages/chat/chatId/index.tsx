@@ -1,9 +1,78 @@
-import React from 'react'
+import ChatBody from "@/components/chat/chat-body";
+import ChatHeader from "@/components/chat/chat-header";
+import EmptyState from "@/components/empty-state";
+import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/hooks/use-auth";
+import { useChat } from "@/hooks/use-chat";
+import useChatId from "@/hooks/use-chat-id";
+import { useSocket } from "@/hooks/use-socket";
+import type { MessageType } from "@/types/chat.type";
+import { useEffect, useState } from "react";
 
 const SingleChat = () => {
-  return (
-    <div>SingleChat</div>
-  )
-}
+  const chatId = useChatId();
 
-export default SingleChat
+  const { fetchSingleChat, isSingleChatLoading, singleChat } = useChat();
+
+  const { socket } = useSocket();
+
+  const { user } = useAuth();
+
+  const [replyTo, setReplyTo] = useState<MessageType | null>(null);
+
+  const currentUserId = user?._id || null;
+  const chat = singleChat?.chat;
+  const messages = singleChat?.messages || [];
+
+  useEffect(() => {
+    if (!chatId) return;
+    fetchSingleChat(chatId);
+  }, [fetchSingleChat, chatId]);
+
+  // socket chat room
+  useEffect(() => {
+    if (!chatId || !socket) return;
+
+    socket.emit("chat:join", chatId);
+
+    return () => {
+      socket.emit("chat:leave", chatId);
+    };
+  }, [chatId, socket]);
+
+  if (isSingleChatLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Spinner className="w-11 h-11 !text-primary" />
+      </div>
+    );
+  }
+
+  if (!chat) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-lg">Chat not found</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full">
+      <div className="relative h-svh flex flex-col overflow-hidden">
+        <ChatHeader chat={chat} currentUserId={currentUserId} />
+        {messages.length === 0 ? (
+          <EmptyState
+            title="Start a conversation"
+            description="No messages yet. Send the first message"
+          />
+        ) : (
+          <ChatBody chatId={chatId} messages={messages} onReply={setReplyTo} />
+        )}
+
+        {/* <ChatFooter/> */}
+      </div>
+    </div>
+  );
+};
+
+export default SingleChat;
