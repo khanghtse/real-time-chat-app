@@ -1,4 +1,5 @@
 import ChatBody from "@/components/chat/chat-body";
+import ChatFooter from "@/components/chat/chat-footer";
 import ChatHeader from "@/components/chat/chat-header";
 import EmptyState from "@/components/empty-state";
 import { Spinner } from "@/components/ui/spinner";
@@ -70,6 +71,12 @@ const SingleChat = () => {
         )}
 
         {/* <ChatFooter/> */}
+        <ChatFooter
+          replyTo={replyTo}
+          chatId={chatId}
+          currentUserId={currentUserId}
+          onCancelReply={() => setReplyTo(null)}
+        />
       </div>
     </div>
   );

@@ -112,7 +112,11 @@ export const emitNewMessageToChatRoom = (
   message: any
 ) => {
   const io = getIO();
-  const senderSocketId = onlineUsers.get(senderId);
+  const senderSocketId = onlineUsers.get(senderId?.toString());
+
+  console.log(senderId, "senderId");
+  console.log(senderSocketId, "sender socketId exist");
+  console.log("All online users:", Object.fromEntries(onlineUsers));
 
   if (senderSocketId) {
     io.to(`chat:${chatId}`).except(senderSocketId).emit("message:new", message);
