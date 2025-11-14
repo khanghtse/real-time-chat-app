@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node dist/index.js",
-    "seed": "ts-node -r dotenv/config ./src/script/seedWhopAI.ts"
+    "seed": "ts-node -r dotenv/config ./src/script/seedWhopAI.ts",
+    "build": "tsc && cp ./package.json ./dist"
   },
   "keywords": [],
   "author": "",
