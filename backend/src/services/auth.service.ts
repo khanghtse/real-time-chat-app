@@ -12,7 +12,10 @@ export const registerService = async (body: RegisterSchemaType) => {
     }
 
     const newUser = new UserModel({
-        ...body,
+        name: body.name,
+        password: body.password,
+        email: body.email,
+        avatar: body.avatar
     });
 
     await newUser.save();

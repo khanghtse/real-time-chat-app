@@ -8,10 +8,10 @@ import { Env } from "./configs/env.config";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware";
 import { HTTPSTATUS } from "./configs/http.config";
 import connectDatabase from "./configs/database.config";
-import "./configs/passport.config"
+import "./configs/passport.config";
 import routes from "./routes";
 import { initializeSocket } from "./lib/socket";
-
+import path from "path";
 
 const app = express();
 const server = http.createServer(app);
@@ -40,7 +40,17 @@ app.get(
 
 app.use("/api", routes);
 
-server.listen(Env.PORT, async() => {
-    await connectDatabase();
+if (Env.NODE_ENV === "production") {
+  const clientPath = path.resolve(__dirname, "../../client/dist");
+
+  app.use(express.static(clientPath));
+
+  app.get(/^(?!\/api).*/, (req: Request, res: Response) => {
+    res.sendFile(path.join(clientPath, "index.html"));
+  });
+}
+
+server.listen(Env.PORT, async () => {
+  await connectDatabase();
   console.log(`Server is running on port ${Env.PORT} in ${Env.NODE_ENV} mode`);
 });

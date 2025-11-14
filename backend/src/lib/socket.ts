@@ -126,13 +126,52 @@ export const emitNewMessageToChatRoom = (
 };
 
 export const emitLastMessageToParticipants = (
-    participantIds: string[],
-    chatId: string,
-    lastMessage: any
+  participantIds: string[],
+  chatId: string,
+  lastMessage: any
 ) => {
-    const io = getIO();
-    const payload = {chatId, lastMessage};
-    for (const participantId of participantIds) {
-        io.to(`user:${participantId}`).emit("chat:update", payload);
-    }
+  const io = getIO();
+  const payload = { chatId, lastMessage };
+  for (const participantId of participantIds) {
+    io.to(`user:${participantId}`).emit("chat:update", payload);
+  }
+};
+
+export const emitChatAI = ({
+  chatId,
+  chunk = null,
+  sender,
+  done = false,
+  message = null,
+}: {
+  chatId: string;
+  chunk?: string | null;
+  sender?: any;
+  done?: boolean;
+  message?: any;
+}) => {
+  const io = getIO();
+  if (chunk?.trim() && !done) {
+    io.to(`chat:${chatId}`).emit("chat:ai", {
+      chatId,
+      chunk,
+      done,
+      message: null,
+      sender
+    });
+
+    return;
+  }
+  
+  if (done) {
+    io.to(`chat:${chatId}`).emit("chat:ai", {
+      chatId,
+      chunk: null,
+      done,
+      message,
+      sender
+    });
+
+    return;
+  } 
 };

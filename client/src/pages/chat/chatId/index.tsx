@@ -24,6 +24,7 @@ const SingleChat = () => {
   const currentUserId = user?._id || null;
   const chat = singleChat?.chat;
   const messages = singleChat?.messages || [];
+  const isAIChat = chat?.isAiChat || false;
 
   useEffect(() => {
     if (!chatId) return;
@@ -44,7 +45,7 @@ const SingleChat = () => {
   if (isSingleChatLoading) {
     return (
       <div className="h-screen flex items-center justify-center">
-        <Spinner className="w-11 h-11 !text-primary" />
+        <Spinner className="w-11 h-11 text-primary!" />
       </div>
     );
   }
@@ -74,6 +75,7 @@ const SingleChat = () => {
         <ChatFooter
           replyTo={replyTo}
           chatId={chatId}
+          isAIChat={isAIChat}
           currentUserId={currentUserId}
           onCancelReply={() => setReplyTo(null)}
         />

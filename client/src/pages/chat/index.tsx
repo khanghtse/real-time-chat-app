@@ -1,5 +1,4 @@
 import EmptyState from '@/components/empty-state'
-import React from 'react'
 
 const Chat = () => {
   return (

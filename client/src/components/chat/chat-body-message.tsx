@@ -6,6 +6,8 @@ import AvatarWithBadge from "../avatar-with-badge";
 import { formatChatTime } from "@/lib/helper";
 import { Button } from "../ui/button";
 import { ReplyIcon } from "lucide-react";
+import { Response } from "../ui/ai-response";
+import {RiCircleFill} from "@remixicon/react"
 
 interface Props {
   message: MessageType;
@@ -49,7 +51,7 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
   return (
     <div className={containerClass}>
       {!isCurrentUser && (
-        <div className="flex-shrink-0 flex items-start">
+        <div className="shrink-0 flex items-start">
           <AvatarWithBadge
             name={message.sender?.name || "No name"}
             src={message.sender?.avatar || ""}
@@ -97,7 +99,13 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
               />
             )}
 
-            {message.content && <p>{message.content}</p>}
+            {message.content && <Response>{message.content}</Response>}
+
+            {message?.streaming && (
+              <span>
+                <RiCircleFill className="w-4 h-4 animate-bounce rounded-full dark:text-white mt-1"/>
+              </span>
+            )}
           </div>
 
           {/* {Reply Icon Button} */}
@@ -106,13 +114,13 @@ const ChatMessageBody = memo(({ message, onReply }: Props) => {
             size="icon"
             onClick={() => onReply(message)}
             className="flex opacity-0 group-hover:opacity-100
-            transition-opacity rounded-full !size-8
+            transition-opacity rounded-full size-8!
             "
           >
             <ReplyIcon
               size={16}
               className={cn(
-                "text-gray-500 dark:text-white !stroke-[1.9]",
+                "text-gray-500 dark:text-white stroke-[1.9]!",
                 isCurrentUser && "scale-x-[-1]"
               )}
             />
